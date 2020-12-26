@@ -4,10 +4,15 @@
     int MaxPokemon = int.Parse(Configuration["MaxPokemon"]);
 }
 <h1>Pokedex</h1>
-@{ 
+@{
     int i = 0;
-
 }
+<div class="btn-group" role="group" aria-label="Basic example">
+    <a asp-action="Index" asp-route-sort="Id" class="btn btn-secondary">Id</a>
+    <a asp-action="Index" asp-route-sort="Name" class="btn btn-secondary">Name</a>
+    <a asp-action="Index" asp-route-sort="Type" class="btn btn-secondary">Type</a>
+</div>
+<p></p>
 @foreach (Pokemon p in Model.Pokemons)
 {
     var url = $"/Images/{p.Id}.png";
