@@ -11,6 +11,7 @@ namespace Pokedex5.ViewModels
     {
         public string PageGenerated { get; set; }
         public IEnumerable<Pokemon> Pokemons { get; set; }
-        public SortField sortField { get; set; }
+        public SortField SortField { get; set; }
+        public SortDirection SortDirection { get; set; }
     }
 }

@@ -15,6 +15,11 @@ namespace Pokedex5.Controllers
     {
         Id, Name, Type
     }
+
+    public enum SortDirection
+    {
+        ASC, DESC
+    }
     public class PokedexController : Controller
     {
         private IPokedex pokedex;
@@ -27,27 +32,28 @@ namespace Pokedex5.Controllers
             this.pokedex = pokedex;
         }
         
-        public IActionResult Index([FromQuery] SortField sort = SortField.Id)
+        public IActionResult Index([FromQuery] SortField sort = SortField.Id, [FromQuery] SortDirection sortDirection = SortDirection.ASC)
         {
             logger.LogInformation("A user has used the pokedex");
             IEnumerable<Pokemon> pokemons = pokedex.GetAll();
             switch (sort)
             {
                 case SortField.Id:
-                    pokemons = pokemons.OrderBy(p => p.Id);
+                    pokemons = (sortDirection == SortDirection.ASC) ? pokemons.OrderBy(p => p.Id) : pokemons.OrderByDescending(p => p.Id);
                     break;
                 case SortField.Name:
-                    pokemons = pokemons.OrderBy(p => p.Name.English);
+                    pokemons = (sortDirection == SortDirection.ASC) ? pokemons.OrderBy(p => p.Name.English) : pokemons.OrderByDescending(p => p.Name.English);
                     break;
                 case SortField.Type:
-                    pokemons = pokemons.OrderBy(p => p.Type.First());
+                    pokemons = (sortDirection == SortDirection.ASC) ? pokemons.OrderBy(p => p.Type[0]) : pokemons.OrderByDescending(p => p.Type[0]);
                     break;
             }
             PokedexListViewModel pokedexListViewModel = new PokedexListViewModel
             {
                 PageGenerated = pokedex.GeneratedAt.ToString(),
                 Pokemons = pokemons,
-                sortField = sort
+                SortField = sort,
+                SortDirection = sortDirection
             };
 
             return View(pokedexListViewModel);
